@@ -34,9 +34,10 @@ module Etcd
     # * path    - etcd server path (etcd server end point)
     # * method  - the request method used
     # * options  - any additional parameters used by request method (optional)
-    def api_execute(path : String, method : String, params : Options = Options.new)
+    def api_execute(path : String, method : String, params : Options = Options.new, timeout : Int32? = nil) : HTTP::Client::Response
       client = new_client
       client.basic_auth(@config.user_name, @config.password)
+      client.read_timeout = timeout || @config.read_timeout
 
       body = params.map do |k, v|
         "#{URI.escape(k.to_s)}=#{URI.escape(v.to_s)}"
@@ -67,7 +68,7 @@ module Etcd
       HTTP::Client.new(host, port.to_i)
     end
 
-    def process_http_request(response : HTTP::Client::Response)
+    def process_http_request(response : HTTP::Client::Response) : HTTP::Client::Response
       case
       when (200..299).includes?(response.status_code)
         # Log.debug('Http success')
