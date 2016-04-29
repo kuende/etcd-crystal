@@ -1,6 +1,7 @@
 require "spec2"
 require "../src/etcd"
 require "secure_random"
+require "./support/*"
 
 def random_key(n = 1)
   String.build do |key|
@@ -8,4 +9,8 @@ def random_key(n = 1)
       key << '/' + SecureRandom.uuid
     end
   end
+end
+
+Spec2.register_matcher(be_directory) do
+  BeDirectoryMatcher(Etcd::Node).new
 end

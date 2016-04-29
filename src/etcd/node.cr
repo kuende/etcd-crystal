@@ -14,7 +14,7 @@ module Etcd
       @modified_index = opts.fetch("modifiedIndex", nil) as Int64?
       @ttl = opts.fetch("ttl", nil) as Int64?
       @key = opts.fetch("key", nil) as String
-      @value = opts.fetch("value", nil) as String
+      @value = opts.fetch("value", nil) as String?
       @expiration = opts.fetch("expiration", nil) as String?
       @dir = opts.fetch("dir", false) as Bool
       @children = [] of Node

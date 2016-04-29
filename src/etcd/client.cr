@@ -38,23 +38,24 @@ module Etcd
       client = new_client
       client.basic_auth(@config.user_name, @config.password)
 
+      body = params.map do |k, v|
+        "#{URI.escape(k.to_s)}=#{URI.escape(v.to_s)}"
+      end.join("&")
+
       if ["POST", "PUT"].includes?(method)
         headers = HTTP::Headers{"Content-type": "application/x-www-form-urlencoded"}
-        body = params.map do |k, v|
-          "#{URI.escape(k.to_s)}=#{URI.escape(v.to_s)}"
-        end.join("&")
       else
+        # Set url encoded form as query string for GET and DELETE
+        path = "#{path}?#{body}"
         body = ""
         headers = HTTP::Headers.new
       end
 
       response = client.exec(method, path, body: body, headers: headers)
 
-      unless response.success?
-        raise HTTPError.new("Server responded with status code #{response.status_code}")
-      end
+      client.close
 
-      response
+      process_http_request(response)
     end
 
     # This method returns a new client for a server from list
@@ -66,29 +67,19 @@ module Etcd
       HTTP::Client.new(host, port.to_i)
     end
 
-
-  #   def api_execute(path, method, params : Hash(String,String) = {} of String => String)
-  #    case  method
-  #    when :get
-  #      req = build_http_request(Net::HTTP::Get, path, params)
-  #    when :post
-  #      req = build_http_request(Net::HTTP::Post, path, nil, params)
-  #    when :put
-  #      req = build_http_request(Net::HTTP::Put, path, nil, params)
-  #    when :delete
-  #      req = build_http_request(Net::HTTP::Delete, path, params)
-  #    else
-  #      fail "Unknown http action: #{method}"
-  #    end
-  #    http = Net::HTTP.new(host, port)
-  #    http.read_timeout = options[:timeout] || read_timeout
-  #    setup_https(http)
-  #    req.basic_auth(user_name, password) if [user_name, password].all?
-  #    Log.debug("Invoking: '#{req.class}' against '#{path}")
-  #    res = http.request(req)
-  #    Log.debug("Response code: #{res.code}")
-  #    Log.debug("Response body: #{res.body}")
-  #    process_http_request(res)
-  #  end
+    def process_http_request(response : HTTP::Client::Response)
+      case
+      when (200..299).includes?(response.status_code)
+        # Log.debug('Http success')
+        response
+      when (400..499).includes?(response.status_code)
+        raise Error.from_http_response(response)
+      else
+        # Log.debug('Http error')
+        # Log.debug(res.body)
+        raise HTTPError.new("Unknown status: #{response.status_code}, response: #{response.body}")
+        # response.error!
+      end
+    end
   end
 end

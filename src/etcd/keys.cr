@@ -23,13 +23,23 @@ module Etcd
     # * key   - whose value to be set
     # * value - value to be set for specified key
     # * ttl   - shelf life of a key (in seconds) (optional)
-    def set(key, opts : Options = Options.new) : Response
+    def set(key : String, opts : Options = Options.new) : Response
       path  = key_endpoint + key
       payload = {} of Symbol => JSON::Type
       [:ttl, :value, :dir, :prevExist, :prevValue, :prevIndex].each do |k|
         payload[k] = opts[k] if opts.has_key?(k)
       end
       response = api_execute(path, "PUT", payload)
+      Response.from_http_response(response)
+    end
+
+
+    # Deletes a key (and its content)
+    #
+    # This method takes the following parameters as arguments
+    # * key - key to be deleted
+    def delete(key : String, opts : Options = Options.new) : Response
+      response = api_execute(key_endpoint + key, "DELETE", opts)
       Response.from_http_response(response)
     end
 
@@ -42,12 +52,20 @@ module Etcd
       false
     end
 
-    def create(key, opts : Options = Options.new)
+    def create(key : String, opts : Options)
       set(key, opts.merge({prevExist: false}))
     end
 
-    def update(key, opts : Options = Options.new)
+    def create(key : String)
+      set(key, Options{prevExist: false})
+    end
+
+    def update(key : String, opts : Options)
       set(key, opts.merge({prevExist: true}))
+    end
+
+    def update(key : String)
+      set(key, Options{prevExist: true})
     end
   end
 end

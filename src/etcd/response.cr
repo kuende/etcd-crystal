@@ -7,9 +7,11 @@ module Etcd
     property raft_index : Int64
     property raft_term : Int64
 
+    delegate key, value, directory?, children, @node
+
     def initialize(opts : Hash(String, JSON::Type), headers : Hash(Symbol, Int64))
       @actions = opts["action"] as String
-      @node = Node.new(opts["node"])
+      @node = Node.new(JSON::Any.new(opts["node"]).as_h)
       @etcd_index = headers[:etcd_index]
       @raft_index = headers[:raft_index]
       @raft_term = headers[:raft_term]
