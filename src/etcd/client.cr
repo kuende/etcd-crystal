@@ -5,6 +5,7 @@ module Etcd
     property config : Config
 
     include Keys
+    include Stats
 
     def initialize(@addrs)
       @config = Config.new

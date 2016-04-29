@@ -1,7 +1,7 @@
 module Etcd
   # manage http responses
   class Response
-    property actions : String
+    property action : String
     property node : Node
     property etcd_index : Int64
     property raft_index : Int64
@@ -10,7 +10,7 @@ module Etcd
     delegate key, value, directory?, children, @node
 
     def initialize(opts : Hash(String, JSON::Type), headers : Hash(Symbol, Int64))
-      @actions = opts["action"] as String
+      @action = opts["action"] as String
       @node = Node.new(JSON::Any.new(opts["node"]).as_h)
       @etcd_index = headers[:etcd_index]
       @raft_index = headers[:raft_index]

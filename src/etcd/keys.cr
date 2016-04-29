@@ -43,6 +43,36 @@ module Etcd
       Response.from_http_response(response)
     end
 
+
+    # Gives a notification when specified key changes
+    #
+    # This method takes the following parameters as arguments
+    # @ key   - key to be watched
+    # @options [Hash] additional options for watching a key
+    # @options [Fixnum] :index watch the specified key from given index
+    # @options [Fixnum] :timeout specify http timeout
+    def watch(key : String, opts : Options = Options.new, timeout : Int32 = -1) : Response
+      params = { wait: true } of Symbol => JSON::Type
+      timeout = timeout != -1 ? timeout : @config.read_timeout
+      index = opts.fetch(:waitIndex, opts.fetch(:index, nil))
+      params[:waitIndex] = index unless index.nil?
+      params[:consistent] = opts[:consistent] if opts.has_key?(:consistent)
+      params[:recursive] = opts[:recursive] if opts.has_key?(:recursive)
+
+      response = api_execute(key_endpoint + key, "GET", params, timeout)
+      Response.from_http_response(response)
+    end
+
+    def create_in_order(dir : String, opts : Options = Options.new) : Response
+      path  = key_endpoint + dir
+      payload = {} of Symbol => JSON::Type
+      [:ttl, :value].each do |k|
+        payload[k] = opts[k] if opts.has_key?(k)
+      end
+      response = api_execute(path, "POST", payload)
+      Response.from_http_response(response)
+    end
+
     def exists?(key)
       # Etcd::Log.debug("Checking if key:' #{key}' exists")
       get(key)
