@@ -1,6 +1,6 @@
 module Etcd
-  class HTTPError < Exception
-  end
+  class HTTPError < Exception; end
+  class IsNotDirectory < Exception; end
 
   class Error < Exception
     property reason : String

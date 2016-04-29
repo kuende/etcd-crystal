@@ -19,12 +19,20 @@ module Etcd
       @dir = opts.fetch("dir", false) as Bool
       @children = [] of Node
 
-      if opts.has_key?("dir") && opts.has_key?("nodes")
+      if @dir && opts.has_key?("nodes")
         nodes = opts["nodes"] as Array(JSON::Type)
         nodes.each do |data|
-          children << Node.new(JSON::Any.new(data).as_h)
+          @children << Node.new(JSON::Any.new(data).as_h)
         end
       end
+    end
+
+    def children : Array(Node)
+      unless @dir
+        raise IsNotDirectory.new("Could not access children for node: #{key} is not a directory")
+      end
+
+      @children
     end
   end
 end
