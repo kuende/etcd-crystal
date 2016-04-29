@@ -41,7 +41,7 @@ Spec2.describe "Etcd watch" do
     channel = Channel(Etcd::Response).new
 
     spawn do
-      channel.send(client.watch(key, {recursive: true, timeout: "3"}))
+      channel.send(client.watch(key, {recursive: true}, 3))
     end
 
     sleep 2
