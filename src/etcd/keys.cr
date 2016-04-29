@@ -27,10 +27,27 @@ module Etcd
       path  = key_endpoint + key
       payload = {} of Symbol => JSON::Type
       [:ttl, :value, :dir, :prevExist, :prevValue, :prevIndex].each do |k|
-        payload[k] = opts[k] if opts.key?(k)
+        payload[k] = opts[k] if opts.has_key?(k)
       end
       response = api_execute(path, "PUT", payload)
       Response.from_http_response(response)
+    end
+
+    def exists?(key)
+      # Etcd::Log.debug("Checking if key:' #{key}' exists")
+      get(key)
+      true
+    rescue e : KeyNotFound
+      # Etcd::Log.debug("Key does not exist #{e}")
+      false
+    end
+
+    def create(key, opts : Options = Options.new)
+      set(key, opts.merge({prevExist: false}))
+    end
+
+    def update(key, opts : Options = Options.new)
+      set(key, opts.merge({prevExist: true}))
     end
   end
 end

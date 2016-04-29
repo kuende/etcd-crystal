@@ -37,7 +37,18 @@ module Etcd
     def api_execute(path : String, method : String, params : Options = Options.new)
       client = new_client
       client.basic_auth(@config.user_name, @config.password)
-      response = client.exec(method, path)
+
+      if ["POST", "PUT"].includes?(method)
+        headers = HTTP::Headers{"Content-type": "application/x-www-form-urlencoded"}
+        body = params.map do |k, v|
+          "#{URI.escape(k.to_s)}=#{URI.escape(v.to_s)}"
+        end.join("&")
+      else
+        body = ""
+        headers = HTTP::Headers.new
+      end
+
+      response = client.exec(method, path, body: body, headers: headers)
 
       unless response.success?
         raise HTTPError.new("Server responded with status code #{response.status_code}")
