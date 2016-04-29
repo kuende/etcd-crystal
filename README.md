@@ -76,6 +76,11 @@ client.watch("/nodes/n1", {recursive: true}, 3) # watch a directory recursive wi
 client.get("/nodes")
 ```
 
+## TODO
+
+- [ ] support SSL options
+- [ ] failover support, currently only the first server provided is used
+
 ## Contributing
 
 1. Fork it ( https://github.com/kuende/etcd-crystal/fork )
