@@ -14,10 +14,21 @@ require "./etcd/client"
 # factory methods for Etcd domain objects
 module Etcd
   ##
-  # Create and return a Etcd::Client object. It takes a hash +opts+
+  # Create and return a Etcd::Client object. It a string or an array of Strings
   # as an argument which gets passed to the Etcd::Client.new method
   # directly
-  # If +opts+ is not passed default options are used, defined by Etcd::Client.new
+
+
+  def self.client(addr : String = "localhost:4001") : Etcd::Client
+    Etcd::Client.new([addr])
+  end
+
+  def self.client(addr : String = "localhost:4001", &block) : Etcd::Client
+    Etcd::Client.new([addr]) do |config|
+      yield config
+    end
+  end
+
   def self.client(addrs : Array(String)) : Etcd::Client
     Etcd::Client.new(addrs)
   end
@@ -26,13 +37,5 @@ module Etcd
     Etcd::Client.new(addrs) do |config|
       yield config
     end
-  end
-
-  def self.client(addr : String) : Etcd::Client
-    self.client([addr])
-  end
-
-  def self.client(addr : String, &block) : Etcd::Client
-    self.client([addr], &block)
   end
 end
