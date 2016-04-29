@@ -44,6 +44,19 @@ module Etcd
     end
 
 
+    # Set a new value for key if previous value of key is matched
+    #
+    # This method takes the following parameters as arguments
+    # * key       - whose value is going to change if previous value is matched
+    # * value     - new value to be set for specified key
+    # * prevValue - value of a key to compare with existing value of key
+    # * ttl       - shelf life of a key (in secsonds) (optional)
+    def compare_and_swap(key : String, opts : Options = Options.new) : Response
+      raise ArgumentError.new("You must pass prevValue") unless opts.has_key?(:prevValue)
+      set(key, opts)
+    end
+
+
     # Gives a notification when specified key changes
     #
     # This method takes the following parameters as arguments
