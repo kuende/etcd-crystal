@@ -6,6 +6,7 @@ require "./etcd/node"
 require "./etcd/options"
 require "./etcd/response"
 require "./etcd/keys"
+require "./etcd/stats"
 require "./etcd/client"
 
 ##
