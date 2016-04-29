@@ -1,7 +1,7 @@
 module Etcd
   class Client
     # Addresses like ['localhost:4001']
-    @addrs : Array(String)
+    property addrs : Array(String)
     property config : Config
 
     include Keys
