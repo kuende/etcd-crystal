@@ -10,7 +10,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   etcd:
-    github: kuende/etcd
+    github: kuende/etcd-crystal
 ```
 
 
