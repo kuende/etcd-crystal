@@ -1,6 +1,11 @@
 require "http/client"
 require "json"
 require "./etcd/config"
+require "./etcd/errors"
+require "./etcd/node"
+require "./etcd/options"
+require "./etcd/response"
+require "./etcd/keys"
 require "./etcd/client"
 
 ##

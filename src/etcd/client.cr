@@ -4,6 +4,8 @@ module Etcd
     @addrs : Array(String)
     property config : Config
 
+    include Keys
+
     def initialize(@addrs)
       @config = Config.new
     end
@@ -32,11 +34,16 @@ module Etcd
     # * path    - etcd server path (etcd server end point)
     # * method  - the request method used
     # * options  - any additional parameters used by request method (optional)
-
-    def api_execute(path : String, method : String)
+    def api_execute(path : String, method : String, params : Options = Options.new)
       client = new_client
       client.basic_auth(@config.user_name, @config.password)
-      client.exec(method, path)
+      response = client.exec(method, path)
+
+      unless response.success?
+        raise HTTPError.new("Server responded with status code #{response.status_code}")
+      end
+
+      response
     end
 
     # This method returns a new client for a server from list
