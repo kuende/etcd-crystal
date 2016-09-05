@@ -98,7 +98,7 @@ Spec2.describe "Etcd specs for the main etcd README examples" do
       channel = Channel(Etcd::Response).new
 
       spawn do
-         channel.send(client.watch("/message"))
+        channel.send(client.watch("/message"))
       end
 
       sleep 0.1
