@@ -36,9 +36,9 @@ end
 ### Set a key
 
 ```crystal
-client.set("/nodes/n1", {value: "1"})
+client.set("/nodes/n1", {:value => "1"})
 # with ttl
-client.set("/nodes/n2", {value: "2", ttl: "4"})  # sets the ttl to 4 seconds
+client.set("/nodes/n2", {:value => "2", :ttl => "4"})  # sets the ttl to 4 seconds
 ```
 
 ### Get a key
@@ -51,13 +51,13 @@ client.get("/nodes/n2").value
 
 ```crystal
 client.delete("/nodes/n1")
-client.delete("/nodes/", {recursive: true})
+client.delete("/nodes/", {:recursive => true})
 ```
 
 ### Compare and swap
 
 ```crystal
-client.compare_and_swap("/nodes/n2", {value: "2", prevValue: "4"}) # will set /nodes/n2 's value to 2 only if its previous value was 4
+client.compare_and_swap("/nodes/n2", {:value => "2", :prevValue => "4"}) # will set /nodes/n2 's value to 2 only if its previous value was 4
 ```
 
 ### Watch a key
@@ -66,8 +66,8 @@ client.compare_and_swap("/nodes/n2", {value: "2", prevValue: "4"}) # will set /n
 client.watch("/nodes/n1") # will wait till the key is changed, and return once its changed
 client.watch("/nodes/n1", Etcd::Options.new, 3) # watch a key with timeout
 
-client.watch("/nodes/n1", {recursive: true}) # watch a directory recursive
-client.watch("/nodes/n1", {recursive: true}, 3) # watch a directory recursive with timeout
+client.watch("/nodes/n1", {:recursive => true}) # watch a directory recursive
+client.watch("/nodes/n1", {:recursive => true}, 3) # watch a directory recursive with timeout
 ```
 
 ### List sub keys

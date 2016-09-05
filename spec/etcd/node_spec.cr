@@ -9,7 +9,7 @@ Spec2.describe Etcd::Node do
     parent = random_key
     child = random_key
     value = SecureRandom.uuid
-    client.set(parent + child, {value: value})
+    client.set(parent + child, {:value => value})
     expect(client.get(parent + child).node).not_to be_directory
     expect(client.get(parent).node).to be_directory
   end
@@ -17,7 +17,7 @@ Spec2.describe Etcd::Node do
   context "#children" do
     it "should raise exception when invoked against a leaf node" do
       parent = random_key
-      client.create(parent, {value: "10"})
+      client.create(parent, {:value => "10"})
       expect do
         client.get(parent).children
       end.to raise_error(Etcd::IsNotDirectory)

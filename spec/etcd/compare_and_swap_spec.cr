@@ -9,18 +9,18 @@ Spec2.describe "Etcd test_and_set" do
     key = random_key(2)
     old_value = SecureRandom.uuid
     new_value = SecureRandom.uuid
-    resp = client.set(key, {value: old_value})
+    resp = client.set(key, {:value => old_value})
     expect(resp.node.value).to eq(old_value)
-    client.compare_and_swap(key, {value: new_value, prevValue: old_value})
+    client.compare_and_swap(key, {:value => new_value, :prevValue => old_value})
     expect(client.get(key).value).to eq(new_value)
   end
 
   it "should fail when prev value is incorrect" do
     key = random_key(2)
     value = SecureRandom.uuid
-    client.set(key, {value: value})
+    client.set(key, {:value => value})
     expect do
-      client.compare_and_swap(key, {value: "10", prevValue: "2"})
+      client.compare_and_swap(key, {:value => "10", :prevValue => "2"})
     end.to raise_error(Etcd::TestFailed)
   end
 
@@ -28,11 +28,11 @@ Spec2.describe "Etcd test_and_set" do
     key = random_key(2)
     value = SecureRandom.uuid
     expect do
-      client.update(key, {value: value})
+      client.update(key, {:value => value})
     end.to raise_error(Etcd::KeyNotFound)
 
     expect do
-      client.create(key, {value: value})
+      client.create(key, {:value => value})
     end.not_to raise_error
     expect(client.get(key).value).to eq(value)
   end
@@ -40,14 +40,14 @@ Spec2.describe "Etcd test_and_set" do
   it "#create should fail when the key is present and update should succeed" do
     key = random_key(2)
     value = SecureRandom.uuid
-    client.set(key, {value: "1"})
+    client.set(key, {:value => "1"})
 
     expect do
-      client.create(key, {value: value})
+      client.create(key, {:value => value})
     end.to raise_error(Etcd::NodeExist)
 
     expect do
-      client.update(key, {value: value})
+      client.update(key, {:value => value})
     end.not_to raise_error
   end
 end

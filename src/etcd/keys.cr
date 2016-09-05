@@ -65,7 +65,10 @@ module Etcd
     # @options [Fixnum] :index watch the specified key from given index
     # @options [Fixnum] :timeout specify http timeout
     def watch(key : String, opts : Options = Options.new, timeout : Int32 = -1) : Response
-      params = { wait: true } of Symbol => JSON::Type
+      # params = { :wait => true }.as(Hash(Symbol, JSON::Type))
+      params = {} of Symbol => JSON::Type
+      params[:wait] = true
+
       timeout = timeout != -1 ? timeout : @config.read_timeout
       index = opts.fetch(:waitIndex, opts.fetch(:index, nil))
       params[:waitIndex] = index unless index.nil?
@@ -96,19 +99,19 @@ module Etcd
     end
 
     def create(key : String, opts : Options)
-      set(key, opts.merge({prevExist: false}))
+      set(key, opts.merge({:prevExist => false}))
     end
 
     def create(key : String)
-      set(key, Options{prevExist: false})
+      set(key, Options{:prevExist => false})
     end
 
     def update(key : String, opts : Options)
-      set(key, opts.merge({prevExist: true}))
+      set(key, opts.merge({:prevExist => true}))
     end
 
     def update(key : String)
-      set(key, Options{prevExist: true})
+      set(key, Options{:prevExist => true})
     end
   end
 end

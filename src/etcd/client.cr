@@ -45,7 +45,7 @@ module Etcd
       end.join("&")
 
       if ["POST", "PUT"].includes?(method)
-        headers = HTTP::Headers{"Content-type": "application/x-www-form-urlencoded"}
+        headers = HTTP::Headers{"Content-type" => "application/x-www-form-urlencoded"}
       else
         # Set url encoded form as query string for GET and DELETE
         path = "#{path}?#{body}"

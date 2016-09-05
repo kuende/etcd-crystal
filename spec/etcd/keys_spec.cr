@@ -9,7 +9,7 @@ Spec2.describe Etcd::Keys do
     it "#set/get" do
       key = random_key
       value = SecureRandom.uuid
-      client.set(key, {value: value})
+      client.set(key, {:value => value})
 
       expect(client.get(key).value).to eq(value)
     end
@@ -17,7 +17,7 @@ Spec2.describe Etcd::Keys do
     describe "#exists?" do
       it "should be true for existing keys" do
         key = random_key
-        client.create(key, {value: "10"})
+        client.create(key, {:value => "10"})
         expect(client.exists?(key)).to be_truthy
       end
 
@@ -29,7 +29,7 @@ Spec2.describe Etcd::Keys do
     describe "directory" do
       it "should be able to create a directory" do
         d = random_key
-        client.create(d, {dir: true})
+        client.create(d, {:dir => true})
 
         expect(client.get(d).node).to be_directory
       end
@@ -37,14 +37,14 @@ Spec2.describe Etcd::Keys do
       describe "empty" do
         it "should be able to delete with dir flag" do
           d = random_key
-          client.create(d, {dir: true})
-          client.delete(d, {dir: true})
+          client.create(d, {:dir => true})
+          client.delete(d, {:dir => true})
           expect(client.exists?(d)).to be_false
         end
 
         it "should not be able to delete without dir flag" do
           d = random_key
-          client.create(d, {dir: true})
+          client.create(d, {:dir => true})
           client.create("#{d}/foobar")
           expect do
             client.delete(d)
@@ -56,19 +56,19 @@ Spec2.describe Etcd::Keys do
       describe "not empty" do
         it "should be able to delete with recursive flag" do
           d = random_key
-          client.create(d, {dir: true})
+          client.create(d, {:dir => true})
           client.create("#{d}/foobar")
           expect do
-            client.delete(d, {dir: true, recursive: true})
+            client.delete(d, {:dir => true, :recursive => true})
           end.not_to raise_error
         end
 
         it "should not be able to delete without recursive flag" do
           d = random_key
-          client.create(d, {dir: true})
+          client.create(d, {:dir => true})
           client.create("#{d}/foobar")
           expect do
-            client.delete(d, {dir: true})
+            client.delete(d, {:dir => true})
           end.to raise_error(Etcd::DirNotEmpty)
         end
       end

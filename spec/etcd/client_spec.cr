@@ -70,7 +70,7 @@ Spec2.describe Etcd::Client do
     let(:response) do
       key = random_key
       value = SecureRandom.uuid
-      client.set(key, {value: value}).not_nil! as Etcd::Response
+      client.set(key, {:value => value}).not_nil!.as(Etcd::Response)
     end
 
     it "#etcd_index" do

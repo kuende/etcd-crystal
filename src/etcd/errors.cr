@@ -8,10 +8,10 @@ module Etcd
     property index : Int64
 
     def initialize(opts : Hash(String, JSON::Type))
-      super(opts["message"] as String)
-      @reason = opts["cause"] as String
-      @index = opts["index"] as Int64
-      @error_code = opts["errorCode"] as Int64
+      super(opts["message"].as(String))
+      @reason = opts["cause"].as(String)
+      @index = opts["index"].as(Int64)
+      @error_code = opts["errorCode"].as(Int64)
     end
 
     def self.from_http_response(response : HTTP::Client::Response)
