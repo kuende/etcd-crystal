@@ -2,7 +2,7 @@ require "../spec_helper"
 
 Spec2.describe "Etcd specs for the main etcd README examples" do
   let(:client) do
-    Etcd.client(["localhost:4001"])
+    Etcd.client(["localhost:2379"])
   end
 
   describe "set a key named '/message'" do

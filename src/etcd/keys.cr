@@ -25,7 +25,7 @@ module Etcd
     # * ttl   - shelf life of a key (in seconds) (optional)
     def set(key : String, opts : Options = Options.new) : Response
       path  = key_endpoint + key
-      payload = {} of Symbol => JSON::Type
+      payload = {} of Symbol => JSON::Any::Type
       [:ttl, :value, :dir, :prevExist, :prevValue, :prevIndex].each do |k|
         payload[k] = opts[k] if opts.has_key?(k)
       end
@@ -65,8 +65,8 @@ module Etcd
     # @options [Fixnum] :index watch the specified key from given index
     # @options [Fixnum] :timeout specify http timeout
     def watch(key : String, opts : Options = Options.new, timeout : Int32 = -1) : Response
-      # params = { :wait => true }.as(Hash(Symbol, JSON::Type))
-      params = {} of Symbol => JSON::Type
+      # params = { :wait => true }.as(Hash(Symbol, JSON::Any::Type))
+      params = {} of Symbol => JSON::Any::Type
       params[:wait] = true
 
       timeout = timeout != -1 ? timeout : @config.read_timeout
@@ -81,7 +81,7 @@ module Etcd
 
     def create_in_order(dir : String, opts : Options = Options.new) : Response
       path  = key_endpoint + dir
-      payload = {} of Symbol => JSON::Type
+      payload = {} of Symbol => JSON::Any::Type
       [:ttl, :value].each do |k|
         payload[k] = opts[k] if opts.has_key?(k)
       end

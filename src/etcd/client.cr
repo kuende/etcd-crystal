@@ -1,6 +1,6 @@
 module Etcd
   class Client
-    # Addresses like ['localhost:4001']
+    # Addresses like ['localhost:2379']
     property addrs : Array(String)
     property config : Config
 

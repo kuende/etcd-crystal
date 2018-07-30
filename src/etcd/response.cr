@@ -9,9 +9,9 @@ module Etcd
 
     delegate key, value, directory?, children, to: @node
 
-    def initialize(opts : Hash(String, JSON::Type), headers : Hash(Symbol, Int64))
-      @action = opts["action"].as(String)
-      @node = Node.new(JSON::Any.new(opts["node"]).as_h)
+    def initialize(opts : Hash(String, JSON::Any), headers : Hash(Symbol, Int64))
+      @action = opts["action"].as_s
+      @node = Node.new(opts["node"].as_h)
       @etcd_index = headers[:etcd_index]
       @raft_index = headers[:raft_index]
       @raft_term = headers[:raft_term]

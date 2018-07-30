@@ -19,11 +19,11 @@ module Etcd
   # directly
 
 
-  def self.client(addr : String = "localhost:4001") : Etcd::Client
+  def self.client(addr : String = "localhost:2379") : Etcd::Client
     Etcd::Client.new([addr])
   end
 
-  def self.client(addr : String = "localhost:4001", &block) : Etcd::Client
+  def self.client(addr : String = "localhost:2379", &block) : Etcd::Client
     Etcd::Client.new([addr]) do |config|
       yield config
     end

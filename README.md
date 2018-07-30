@@ -21,13 +21,13 @@ dependencies:
 ```crystal
 require "etcd"
 
-client = Etcd.client # this will create a client against etcd server running on localhost on port 4001
-client = Etcd.client("localhost:4001")
+client = Etcd.client # this will create a client against etcd server running on localhost on port 2379
+client = Etcd.client("localhost:2379")
 client = Etcd.client do |config|
   config.user_name = "foo"
   config.password = "bar"
 end
-client = Etcd.client("localhost:4001") do |config|
+client = Etcd.client("localhost:2379") do |config|
   config.user_name = "foo"
   config.password = "bar"
 end
