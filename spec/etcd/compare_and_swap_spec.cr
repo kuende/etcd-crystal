@@ -7,8 +7,8 @@ Spec2.describe "Etcd test_and_set" do
 
   it "should pass when prev value is correct" do
     key = random_key(2)
-    old_value = SecureRandom.uuid
-    new_value = SecureRandom.uuid
+    old_value = UUID.random.to_s
+    new_value = UUID.random.to_s
     resp = client.set(key, {:value => old_value})
     expect(resp.node.value).to eq(old_value)
     client.compare_and_swap(key, {:value => new_value, :prevValue => old_value})
@@ -17,7 +17,7 @@ Spec2.describe "Etcd test_and_set" do
 
   it "should fail when prev value is incorrect" do
     key = random_key(2)
-    value = SecureRandom.uuid
+    value = UUID.random.to_s
     client.set(key, {:value => value})
     expect do
       client.compare_and_swap(key, {:value => "10", :prevValue => "2"})
@@ -26,7 +26,7 @@ Spec2.describe "Etcd test_and_set" do
 
   it "#create should succeed when the key is absent and update should fail" do
     key = random_key(2)
-    value = SecureRandom.uuid
+    value = UUID.random.to_s
     expect do
       client.update(key, {:value => value})
     end.to raise_error(Etcd::KeyNotFound)
@@ -39,7 +39,7 @@ Spec2.describe "Etcd test_and_set" do
 
   it "#create should fail when the key is present and update should succeed" do
     key = random_key(2)
-    value = SecureRandom.uuid
+    value = UUID.random.to_s
     client.set(key, {:value => "1"})
 
     expect do

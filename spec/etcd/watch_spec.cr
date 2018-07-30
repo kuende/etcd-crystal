@@ -7,8 +7,8 @@ Spec2.describe "Etcd watch" do
 
   it "without index, returns the value at a particular index" do
     key = random_key(4)
-    value1 = SecureRandom.uuid
-    value2 = SecureRandom.uuid
+    value1 = UUID.random.to_s
+    value2 = UUID.random.to_s
 
     index1 = client.create(key, {:value => value1}).node.modified_index
     index2 = client.compare_and_swap(key, {:value => value2, :prevValue => value1}).node.modified_index
@@ -20,7 +20,7 @@ Spec2.describe "Etcd watch" do
   it "with index, waits and return when the key is updated" do
     key = random_key
 
-    value = SecureRandom.uuid
+    value = UUID.random.to_s
     channel = Channel(Etcd::Response).new
 
     spawn do
@@ -35,7 +35,7 @@ Spec2.describe "Etcd watch" do
 
   it "with recrusive, waits and return when the key is updated" do
     key = random_key
-    value = SecureRandom.uuid
+    value = UUID.random.to_s
     client.set("#{key}/subkey", {:value => "initial_value"})
 
     channel = Channel(Etcd::Response).new

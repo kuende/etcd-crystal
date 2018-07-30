@@ -8,7 +8,7 @@ Spec2.describe Etcd::Keys do
   describe "basic key operations" do
     it "#set/get" do
       key = random_key
-      value = SecureRandom.uuid
+      value = UUID.random.to_s
       client.set(key, {:value => value})
 
       expect(client.get(key).value).to eq(value)

@@ -7,11 +7,11 @@ module Etcd
     property error_code : Int64
     property index : Int64
 
-    def initialize(opts : Hash(String, JSON::Type))
-      super(opts["message"].as(String))
-      @reason = opts["cause"].as(String)
-      @index = opts["index"].as(Int64)
-      @error_code = opts["errorCode"].as(Int64)
+    def initialize(opts : Hash(String, JSON::Any))
+      super(opts["message"].as_s)
+      @reason = opts["cause"].as_s
+      @index = opts["index"].as_i64
+      @error_code = opts["errorCode"].as_i64
     end
 
     def self.from_http_response(response : HTTP::Client::Response)

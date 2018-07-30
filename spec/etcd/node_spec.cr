@@ -8,7 +8,7 @@ Spec2.describe Etcd::Node do
   it "should create a directory with parent key when nested keys are set" do
     parent = random_key
     child = random_key
-    value = SecureRandom.uuid
+    value = UUID.random.to_s
     client.set(parent + child, {:value => value})
     expect(client.get(parent + child).node).not_to be_directory
     expect(client.get(parent).node).to be_directory

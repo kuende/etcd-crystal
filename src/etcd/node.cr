@@ -9,20 +9,20 @@ module Etcd
     property dir : Bool?
     property children : Array(Node)
 
-    def initialize(opts : Hash(String, JSON::Type))
-      @created_index = opts.fetch("createdIndex", nil).as(Int64?)
-      @modified_index = opts.fetch("modifiedIndex", nil).as(Int64?)
-      @ttl = opts.fetch("ttl", nil).as(Int64?)
-      @key = opts.fetch("key", "/").as(String)
-      @value = opts.fetch("value", nil).as(String?)
-      @expiration = opts.fetch("expiration", nil).as(String?)
-      @dir = opts.fetch("dir", false).as(Bool)
+    def initialize(opts : Hash(String, JSON::Any))
+      @created_index = opts.fetch("createdIndex", nil).try &.as_i64?
+      @modified_index = opts.fetch("modifiedIndex", nil).try &.as_i64?
+      @ttl = opts.fetch("ttl", nil).try &.as_i64?
+      @key = opts.fetch("key", "/").to_s
+      @value = opts.fetch("value", nil).try &.as_s?
+      @expiration = opts.fetch("expiration", nil).try &.as_s?
+      @dir = opts["dir"]?.try(&.as_bool) || false
       @children = [] of Node
 
       if @dir && opts.has_key?("nodes")
-        nodes = opts["nodes"].as(Array(JSON::Type))
+        nodes = opts["nodes"].as_a
         nodes.each do |data|
-          @children << Node.new(JSON::Any.new(data).as_h)
+          @children << Node.new(data.as_h)
         end
       end
     end

@@ -69,7 +69,7 @@ Spec2.describe Etcd::Client do
   context "#http header based metadata" do
     let(:response) do
       key = random_key
-      value = SecureRandom.uuid
+      value = UUID.random.to_s
       client.set(key, {:value => value}).not_nil!.as(Etcd::Response)
     end
 

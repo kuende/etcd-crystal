@@ -1,18 +1,18 @@
 require "spec2"
+require "uuid"
 require "../src/etcd"
-require "secure_random"
 require "./support/*"
 
 def random_key(n = 1)
   String.build do |key|
     n.times do
-      key << '/' + SecureRandom.uuid
+      key << '/' + UUID.random.to_s
     end
   end
 end
 
 def etcd_leader
-  servers = ENV.fetch("ETCD_SERVERS", "localhost:4001,localhost:4002,localhost:4003")
+  servers = ENV.fetch("ETCD_SERVERS", "localhost:4001,localhost:4001,localhost:4002,localhost:4003")
   clients = servers.split(",").map do |srv|
     Etcd.client(srv)
   end.to_a
