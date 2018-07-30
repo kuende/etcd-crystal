@@ -2,7 +2,7 @@ require "../spec_helper"
 
 Spec2.describe Etcd::Keys do
   let(:client) do
-    Etcd.client(["localhost:4001"])
+    Etcd.client(["localhost:2379"])
   end
 
   describe "basic key operations" do

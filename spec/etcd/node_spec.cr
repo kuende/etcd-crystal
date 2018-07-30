@@ -2,7 +2,7 @@ require "../spec_helper"
 
 Spec2.describe Etcd::Node do
   let(:client) do
-    Etcd.client(["localhost:4001"])
+    Etcd.client(["localhost:2379"])
   end
 
   it "should create a directory with parent key when nested keys are set" do

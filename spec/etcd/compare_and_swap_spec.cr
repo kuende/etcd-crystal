@@ -2,7 +2,7 @@ require "../spec_helper"
 
 Spec2.describe "Etcd test_and_set" do
   let :client do
-    Etcd.client(["localhost:4001"])
+    Etcd.client(["localhost:2379"])
   end
 
   it "should pass when prev value is correct" do

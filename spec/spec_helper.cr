@@ -12,7 +12,7 @@ def random_key(n = 1)
 end
 
 def etcd_leader
-  servers = ENV.fetch("ETCD_SERVERS", "localhost:4001,localhost:4001,localhost:4002,localhost:4003")
+  servers = ENV.fetch("ETCD_SERVERS", "localhost:2379,localhost:4001,localhost:4002")
   clients = servers.split(",").map do |srv|
     Etcd.client(srv)
   end.to_a
