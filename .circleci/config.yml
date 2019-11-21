@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: crystallang/crystal
+      - image: appcelerator/etcd
+        command:
+          - --listen-client-urls=http://localhost:2379
+          - --advertise-client-urls=http://localhost:2379
+          - --enable-v2=true
+    branches:
+      ignore:
+        - gh-pages
+    working_directory: ~/etcd_cr
+    steps:
+      - checkout
+      - run:
+          name: "Crystal version"
+          command: crystal version
+      - run:
+          name: "Install dependencies"
+          command: shards install
+      - run:
+          name: "Specs"
+          command: crystal spec
