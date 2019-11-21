@@ -21,6 +21,8 @@ module Etcd
         raise HTTPError.new("Unknown error code: #{code}")
       end
       ERROR_CODE_MAPPING[code].new(opts.as_h)
+    rescue JSON::ParseException
+      raise HTTPError.new(response.body)
     end
 
     def inspect

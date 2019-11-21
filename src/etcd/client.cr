@@ -41,7 +41,7 @@ module Etcd
       client.read_timeout = timeout || @config.read_timeout
 
       body = params.map do |k, v|
-        "#{URI.escape(k.to_s)}=#{URI.escape(v.to_s)}"
+        "#{URI.encode_www_form(k.to_s)}=#{URI.encode_www_form(v.to_s)}"
       end.join("&")
 
       if ["POST", "PUT"].includes?(method)
@@ -70,11 +70,11 @@ module Etcd
     end
 
     def process_http_request(response : HTTP::Client::Response) : HTTP::Client::Response
-      case
-      when (200..299).includes?(response.status_code)
+      case response.status_code
+      when 200..299
         # Log.debug('Http success')
         response
-      when (400..499).includes?(response.status_code)
+      when 400..499
         raise Error.from_http_response(response)
       else
         # Log.debug('Http error')
