@@ -2,8 +2,9 @@
 
 A crystal client for [etcd](https://github.com/coreos/etcd). Heavily inspired from the ruby etcd [client](https://github.com/ranjib/etcd-ruby).
 
-## Installation
+> **ONLY support etcd API v2 version**, it means you need run `etcd --enable-v2=true` in etcd 3.0+ version.
 
+## Installation
 
 Add this to your application's `shard.yml`:
 
@@ -12,7 +13,6 @@ dependencies:
   etcd:
     github: kuende/etcd-crystal
 ```
-
 
 ## Usage
 
