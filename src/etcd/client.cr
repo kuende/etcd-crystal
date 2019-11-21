@@ -71,8 +71,6 @@ module Etcd
     end
 
     def process_http_request(response : HTTP::Client::Response) : HTTP::Client::Response
-      puts response.status_code
-      puts response.body
       case response.status_code
       when 200..299
         # Log.debug('Http success')
