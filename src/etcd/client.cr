@@ -43,6 +43,7 @@ module Etcd
       body = params.map do |k, v|
         "#{URI.encode_www_form(k.to_s)}=#{URI.encode_www_form(v.to_s)}"
       end.join("&")
+      puts body
 
       if ["POST", "PUT"].includes?(method)
         headers = HTTP::Headers{"Content-type" => "application/x-www-form-urlencoded"}
