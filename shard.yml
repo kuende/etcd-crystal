@@ -1,8 +1,9 @@
 name: etcd
-version: 0.2.2
+version: 0.2.3
 
 authors:
   - Teodor <teodor.pripoae@gmail.com>
+  - icyleaf <icyleaf.cn@gmail.com>
 
 license: Apache 2
 
