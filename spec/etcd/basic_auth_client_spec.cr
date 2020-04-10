@@ -1,18 +1,18 @@
 require "../spec_helper"
 
-Spec2.describe "Etcd basic auth client" do
-  let :client do
-    Etcd.client(["localhost:2379"]) do |config|
-      config.user_name = "test"
-      config.password = "pwd"
-    end
+private def client
+  Etcd.client(["localhost:2379"]) do |config|
+    config.user_name = "test"
+    config.password = "pwd"
   end
+end
 
+describe "Etcd basic auth client" do
   it "#user_name" do
-    expect(client.config.user_name).to eq("test")
+    client.config.user_name.should eq("test")
   end
 
   it "#password" do
-    expect(client.config.password).to eq("pwd")
+    client.config.password.should eq("pwd")
   end
 end

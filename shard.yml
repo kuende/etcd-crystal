@@ -6,9 +6,4 @@ authors:
 
 license: Apache 2
 
-development_dependencies:
-  spec2:
-    github: maiha/spec2.cr
-    branch: master
-
-crystal: 0.31.1
+crystal: 0.34.0

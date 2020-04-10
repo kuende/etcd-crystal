@@ -1,40 +1,34 @@
 require "../spec_helper"
 
-Spec2.describe "Etcd test_and_set" do
-  let :client do
-    Etcd.client(["localhost:2379"])
-  end
-
+describe "Etcd test_and_set" do
   it "should pass when prev value is correct" do
     key = random_key(2)
     old_value = UUID.random.to_s
     new_value = UUID.random.to_s
     resp = client.set(key, {:value => old_value})
-    expect(resp.node.value).to eq(old_value)
+    resp.node.value.should eq(old_value)
     client.compare_and_swap(key, {:value => new_value, :prevValue => old_value})
-    expect(client.get(key).value).to eq(new_value)
+    client.get(key).value.should eq(new_value)
   end
 
   it "should fail when prev value is incorrect" do
     key = random_key(2)
     value = UUID.random.to_s
     client.set(key, {:value => value})
-    expect do
+    expect_raises Etcd::TestFailed do
       client.compare_and_swap(key, {:value => "10", :prevValue => "2"})
-    end.to raise_error(Etcd::TestFailed)
+    end
   end
 
   it "#create should succeed when the key is absent and update should fail" do
     key = random_key(2)
     value = UUID.random.to_s
-    expect do
+    expect_raises Etcd::KeyNotFound do
       client.update(key, {:value => value})
-    end.to raise_error(Etcd::KeyNotFound)
+    end
 
-    expect do
-      client.create(key, {:value => value})
-    end.not_to raise_error
-    expect(client.get(key).value).to eq(value)
+    client.create(key, {:value => value})
+    client.get(key).value.should eq(value)
   end
 
   it "#create should fail when the key is present and update should succeed" do
@@ -42,12 +36,10 @@ Spec2.describe "Etcd test_and_set" do
     value = UUID.random.to_s
     client.set(key, {:value => "1"})
 
-    expect do
+    expect_raises Etcd::NodeExist do
       client.create(key, {:value => value})
-    end.to raise_error(Etcd::NodeExist)
+    end
 
-    expect do
-      client.update(key, {:value => value})
-    end.not_to raise_error
+    client.update(key, {:value => value})
   end
 end

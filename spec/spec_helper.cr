@@ -1,7 +1,12 @@
-require "spec2"
+require "spec"
 require "uuid"
 require "../src/etcd"
-require "./support/*"
+
+ETCD_SERVERS = [
+  "localhost:2379",
+  "localhost:4001",
+  "localhost:4002"
+]
 
 def random_key(n = 1)
   String.build do |key|
@@ -12,7 +17,7 @@ def random_key(n = 1)
 end
 
 def etcd_leader
-  servers = ENV.fetch("ETCD_SERVERS", "localhost:2379,localhost:4001,localhost:4002")
+  servers = ENV.fetch("ETCD_SERVERS", ETCD_SERVERS.join(','))
   clients = servers.split(",").map do |srv|
     Etcd.client(srv)
   end.to_a
@@ -22,6 +27,6 @@ def etcd_leader
   end.not_nil!
 end
 
-Spec2.register_matcher(be_directory) do
-  BeDirectoryMatcher(Etcd::Node).new
+def client
+  Etcd.client(ETCD_SERVERS)
 end

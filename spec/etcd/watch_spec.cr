@@ -1,10 +1,6 @@
 require "../spec_helper"
 
-Spec2.describe "Etcd watch" do
-  let :client do
-    Etcd.client(["localhost:2379"])
-  end
-
+describe "Etcd watch" do
   it "without index, returns the value at a particular index" do
     key = random_key(4)
     value1 = UUID.random.to_s
@@ -13,8 +9,8 @@ Spec2.describe "Etcd watch" do
     index1 = client.create(key, {:value => value1}).node.modified_index
     index2 = client.compare_and_swap(key, {:value => value2, :prevValue => value1}).node.modified_index
 
-    expect(client.watch(key, {:index => index1}).node.value).to eq(value1)
-    expect(client.watch(key, {:index => index2}).node.value).to eq(value2)
+    client.watch(key, {:index => index1}).node.value.should eq(value1)
+    client.watch(key, {:index => index2}).node.value.should eq(value2)
   end
 
   it "with index, waits and return when the key is updated" do
@@ -30,7 +26,7 @@ Spec2.describe "Etcd watch" do
     client.set(key, {:value => value})
 
     response = channel.receive
-    expect(response.node.value).to eq(value)
+    response.node.value.should eq(value)
   end
 
   it "with recrusive, waits and return when the key is updated" do
@@ -48,6 +44,6 @@ Spec2.describe "Etcd watch" do
     client.set("#{key}/subkey", {:value => value})
 
     response = channel.receive
-    expect(response.node.value).to eq(value)
+    response.node.value.should eq(value)
   end
 end
