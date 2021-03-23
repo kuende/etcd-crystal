@@ -2,23 +2,18 @@ require "spec"
 require "uuid"
 require "../src/etcd"
 
-ETCD_SERVERS = [
-  "localhost:2379",
-  "localhost:4001",
-  "localhost:4002"
-]
+def etcd_servers
+  servers = ENV.fetch("ETCD_SERVERS", "localhost:2379,localhost:4001,localhost:4002")
+  servers.includes?(',') ? servers.split(',') : servers
+end
 
-def random_key(n = 1)
-  String.build do |key|
-    n.times do
-      key << '/' + UUID.random.to_s
-    end
-  end
+def client
+  Etcd.client(etcd_servers)
 end
 
 def etcd_leader
-  servers = ENV.fetch("ETCD_SERVERS", ETCD_SERVERS.join(','))
-  clients = servers.split(",").map do |srv|
+  servers = ENV.fetch("ETCD_SERVERS", "localhost:2379,localhost:4001,localhost:4002")
+  clients = servers.split(',').map do |srv|
     Etcd.client(srv)
   end.to_a
 
@@ -27,6 +22,10 @@ def etcd_leader
   end.not_nil!
 end
 
-def client
-  Etcd.client(ETCD_SERVERS)
+def random_key(n = 1)
+  String.build do |key|
+    n.times do
+      key << '/' + UUID.random.to_s
+    end
+  end
 end

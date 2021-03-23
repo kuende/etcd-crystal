@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: crystallang/crystal
+      - image: crystallang/crystal:1.0.0
       - image: appcelerator/etcd
         command:
           - --listen-client-urls=http://localhost:2379
